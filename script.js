@@ -3,6 +3,7 @@
 const displayController = (() => {
     const renderMessage = (message) => {
         document.querySelector("#message").innerHTML = message;
+        controlsDisplay.forEach(control => control.style.display = "block");
     }
     return {
         renderMessage,
@@ -217,7 +218,10 @@ function checkForTie(board) {
 
 const startButton = document.querySelector("#start-button");
 startButton.addEventListener("click", () => {
+    controlsDisplay.forEach(control => control.style.display = "none");
     Game.start();
 })
 
 const checkbox = document.querySelector("#checkbox");
+
+const controlsDisplay = document.querySelectorAll("#controls > *:not(.message-class)");
