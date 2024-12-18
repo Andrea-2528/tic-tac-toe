@@ -61,16 +61,26 @@ const Game = (() => {
     let gameOver;
 
     const start = () => {
+        const aiFirst = checkbox.checked;
+        document.querySelector("#message").innerHTML = "";
         for (let i = 0; i < 9; i++) {
             Gameboard.update(i, "");
         }
-        players = [
-            createPlayer(document.querySelector("#player1").value, "O"),
-            createPlayer(document.querySelector("#player2").value, "X")
-        ];
+        if(aiFirst){
+            players=[
+                createPlayer(document.querySelector("#player1").value, "O"),
+                createPlayer("AI", "X")
+            ];
+            Gameboard.update(0, "X");
+        }else {
+            players=[
+                createPlayer(document.querySelector("#player1").value, "X"),
+                createPlayer("AI", "O")
+            ];
+        }
+
         gameOver = false;
         Gameboard.render(); //Maybe this is reduntant, need to check
-        Gameboard.update(0, "X");   // Add choice for difficulty, changing starting AI position (center, edge, corner; indexes 0, 1, 4)
     };
 
     const handleClick = (event) => {
@@ -107,16 +117,17 @@ const Game = (() => {
         let bestScore = -Infinity;
         let move;
         for (let i = 0; i < 9; i++) {
+                                                        console.log(`AI searching in pos: ${i}`);
             if (Gameboard.getGameboard()[i] === "") {
                 Gameboard.update(i, players[1].mark);
                 let score = minimax(0, false);
+                                                        console.log(`Score: ${score}`);
                 Gameboard.update(i, "");
                 if (score > bestScore) {
                     bestScore = score;
                     move = i;
                 }
-            }
-            console.log(`AI pos: ${i}`);
+            }            
         }
         currentPlayerIndex = 1;
         Gameboard.update(move, players[currentPlayerIndex].mark);
@@ -131,11 +142,21 @@ const Game = (() => {
 
     const minimax = (depth, isMaximizing) => {
 
-        if (checkForWin(Gameboard.getGameboard()) === "X") {
-            return 1;
-        } else if (checkForWin(Gameboard.getGameboard()) === "O") {
-            return -1;
-        } else if (checkForTie(Gameboard.getGameboard())) {
+        //console.log(`Depth: ${depth}`);
+
+        if(checkForWin(Gameboard.getGameboard()) === "X"){
+            if(checkbox.checked){
+                return 1;
+            }else{
+                return -1;
+            };
+        }else if(checkForWin(Gameboard.getGameboard()) === "O"){
+            if(checkbox.checked){
+                return -1;
+            }else{
+                return 1;
+            };
+        }else if(checkForTie(Gameboard.getGameboard())){
             return 0;
         }
 
@@ -149,7 +170,6 @@ const Game = (() => {
                     Gameboard.update(i, "");
                     bestScore = Math.max(score, bestScore);
                 }
-                console.log(`isMaximizing: ${i}`);
             }
             return bestScore;
         } else if (!isMaximizing) {
@@ -162,25 +182,14 @@ const Game = (() => {
                     Gameboard.update(i, "");
                     bestScore = Math.min(score, bestScore);
                 }
-                console.log(`isMinimizing: ${i}`);
             }
             return bestScore;
         }
     };
-    const restart = () => {
-        for (let i = 0; i < 9; i++) {
-            Gameboard.update(i, "");
-        }
-        Gameboard.render;
-        currentPlayerIndex = 0;
-        gameOver = false;
-        document.querySelector("#message").innerHTML = "";
-    };
 
     return {
         start,
-        handleClick,
-        restart,
+        handleClick
     };
 
 })();
@@ -197,7 +206,6 @@ function checkForWin(board) {
             return "O";
         }
     }
-
     return false;
 }
 
@@ -207,12 +215,9 @@ function checkForTie(board) {
 
 //---------------------------------------------------------------------------------------------------------------
 
-const restartButton = document.querySelector("#restart-button");
-restartButton.addEventListener("click", () => {
-    Game.restart();
-})
-
 const startButton = document.querySelector("#start-button");
 startButton.addEventListener("click", () => {
     Game.start();
 })
+
+const checkbox = document.querySelector("#checkbox");
