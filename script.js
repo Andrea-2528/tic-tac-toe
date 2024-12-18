@@ -141,7 +141,7 @@ const Game = (() => {
         }
     }
 
-    const minimax = (depth, isMaximizing) => {
+    const minimax = (depth, isMaximizing, alpha, beta) => {
 
         //console.log(`Depth: ${depth}`);
 
@@ -168,6 +168,10 @@ const Game = (() => {
                 if (Gameboard.getGameboard()[i] === "") {
                     Gameboard.update(i, players[1].mark);
                     let score = minimax(depth + 1, false);
+                    alpha = Math.max(alpha, score);
+                    if (beta <= alpha) {
+                        break;
+                    }
                     Gameboard.update(i, "");
                     bestScore = Math.max(score, bestScore);
                 }
@@ -180,6 +184,10 @@ const Game = (() => {
                 if (Gameboard.getGameboard()[i] === "") {
                     Gameboard.update(i, players[0].mark);
                     let score = minimax(depth + 1, true);
+                    beta = Math.min(beta, score);
+                    if (beta <= alpha) {
+                        break;
+                    }
                     Gameboard.update(i, "");
                     bestScore = Math.min(score, bestScore);
                 }
