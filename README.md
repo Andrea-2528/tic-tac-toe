@@ -7,7 +7,7 @@ LIVE: https://andrea-2528.github.io/tic-tac-toe/
     Therefore, given the uselessness of this project looks, I'll leave it as is, so that one can more easily focus on the perfection of choice 
     guided by the minimax algorithm, that makes a SOLVED game like tic-tac-toe not boring AT ALL.
     Sure, you mathematically can't win, but sometimes a draw is so unreachable that the mere idea of its future existance is enough to make you smile, and try, and look:
-    Seem you managed to draw instead of losing, good job! :) 
+    Seems you managed to draw instead of losing, good job! :) 
 
 - As a future idea, one could try implementing ultimate tic-tac-toe (basically, there's a grid inside each cell of the grid and unique rules are therefore applied).
     - This would make the game more unpredictable and more interesting:
