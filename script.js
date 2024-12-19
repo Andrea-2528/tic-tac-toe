@@ -72,16 +72,14 @@ const Game = (() => {
                 createPlayer(document.querySelector("#player1").value, "O"),
                 createPlayer("AI", "X")
             ];
-            Gameboard.update(0, "X");
+            Gameboard.update(Math.floor(Math.random()*9), "X");
         }else {
             players=[
                 createPlayer(document.querySelector("#player1").value, "X"),
                 createPlayer("AI", "O")
             ];
         }
-
         gameOver = false;
-        Gameboard.render(); //Maybe this is reduntant, need to check
     };
 
     const handleClick = (event) => {
@@ -121,7 +119,7 @@ const Game = (() => {
                                                         console.log(`AI searching in pos: ${i}`);
             if (Gameboard.getGameboard()[i] === "") {
                 Gameboard.update(i, players[1].mark);
-                let score = minimax(0, false);
+                let score = minimax(0, false, -Infinity, Infinity);
                                                         console.log(`Score: ${score}`);
                 Gameboard.update(i, "");
                 if (score > bestScore) {
